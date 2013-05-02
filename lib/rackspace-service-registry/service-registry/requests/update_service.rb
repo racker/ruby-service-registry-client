@@ -6,7 +6,7 @@ module Fog
         def update_service(serviceId)
           request(
             :expects  => [204],
-            :method   => 'POST',
+            :method   => 'PUT',
             :path     => "services/#{serviceId}"
           )
         end
