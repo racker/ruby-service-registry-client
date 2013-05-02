@@ -17,7 +17,7 @@ module Fog
         def get(key)
           data = connection.get_configuration_value(key).body
           new(data)
-        rescue Fog::Rackspace::ServiceRegistry::NotFound
+        rescue Excon::Errors::NotFound
           nil
         end
 

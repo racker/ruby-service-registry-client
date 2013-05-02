@@ -17,7 +17,7 @@ module Fog
         def get(serviceId)
           data = connection.get_service(serviceId).body
           new(data)
-        rescue Fog::Rackspace::ServiceRegistry::NotFound
+        rescue Excon::Errors::NotFound
           nil
         end
 

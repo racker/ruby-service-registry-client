@@ -9,7 +9,6 @@ module Fog
       class ServiceError < Fog::Rackspace::Errors::ServiceError; end
       class InternalServerError < Fog::Rackspace::Errors::InternalServerError; end
       class BadRequest < Fog::Rackspace::Errors::BadRequest; end
-      class NotFound < Excon::Errors::NotFound; end
 
       ENDPOINT = 'https://dfw.registry.api.rackspacecloud.com/v1.0'
 
@@ -79,12 +78,7 @@ module Fog
               :path     => "#{@path}/#{params[:path]}"
             }))
           rescue Excon::Errors::HTTPStatusError => error
-            raise case error
-            when Excon::Errors::NotFound
-              Fog::Rackspace::ServiceRegistry::NotFound.slurp(error)
-            else
-              error
-            end
+            raise error
           end
           unless response.body.empty?
             begin
