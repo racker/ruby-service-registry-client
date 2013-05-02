@@ -52,7 +52,6 @@ module Fog
           @rackspace_api_key = options[:rackspace_api_key]
           @rackspace_username = options[:rackspace_username]
           @rackspace_auth_url = options[:rackspace_auth_url] || US_AUTH_ENDPOINT
-          @rackspace_must_reauthenticate = false
           @connection_options = options[:connection_options] || {}
 
           @rackspace_endpoint = options[:rackspace_endpoint] || ENDPOINT
@@ -62,7 +61,6 @@ module Fog
           @persistent = options[:persistent] || false
 
           @connection = Fog::Connection.new(@rackspace_endpoint, @persistent, @connection_options)
-          end
         end
 
         def reload
@@ -92,6 +90,7 @@ module Fog
               response.body = Fog::JSON.decode(response.body)
             rescue Fog::JSON::LoadError
               response.body = {}
+            end
           end
           response
         end
