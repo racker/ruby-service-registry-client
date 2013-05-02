@@ -3,8 +3,10 @@ module Fog
     class ServiceRegistry
       class Real
 
-        def update_service(serviceId)
+        def update_service(serviceId, options = {})
+          data = options.dup
           request(
+            :body     => JSON.encode(data),
             :expects  => [204],
             :method   => 'PUT',
             :path     => "services/#{serviceId}"
