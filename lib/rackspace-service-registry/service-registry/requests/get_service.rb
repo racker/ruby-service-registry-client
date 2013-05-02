@@ -3,13 +3,11 @@ module Fog
     class ServiceRegistry
       class Real
 
-        def list_services(tag=nil)
-          path = "services"
-          path += "?tag=%s" % [tag] unless tag.nil?
+        def get_service(serviceId)
           request(
             :expects  => [200],
             :method   => 'GET',
-            :path     => path
+            :path     => "services/#{serviceId}"
           )
         end
 
