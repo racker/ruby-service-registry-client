@@ -9,6 +9,7 @@ module Fog
       class ServiceError < Fog::Rackspace::Errors::ServiceError; end
       class InternalServerError < Fog::Rackspace::Errors::InternalServerError; end
       class BadRequest < Fog::Rackspace::Errors::BadRequest; end
+      class NotFound < Excon::Errors::NotFound; end
 
       ENDPOINT = 'https://dfw.registry.api.rackspacecloud.com/v1.0'
 
