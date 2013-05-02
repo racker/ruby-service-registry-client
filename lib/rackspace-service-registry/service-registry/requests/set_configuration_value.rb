@@ -3,10 +3,9 @@ module Fog
     class ServiceRegistry
       class Real
 
-        def set_configuration_value(configurationId, options = {})
-          data = options.dup
+        def set_configuration_value(configurationId, value)
           request(
-            :body     => Fog::JSON.encode(data)
+            :body     => Fog::JSON.encode(:value => value)
             :expects  => [204],
             :method   => 'PUT',
             :path     => "configuration/#{configurationId}"
