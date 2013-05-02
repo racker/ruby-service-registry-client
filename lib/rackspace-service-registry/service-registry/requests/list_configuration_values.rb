@@ -3,11 +3,9 @@ module Fog
     class ServiceRegistry
       class Real
 
-        def list_configuration_values(*namespaces)
+        def list_configuration_values(prefix=nil)
           path = 'configuration'
-          unless namespaces.empty?
-            path += '/%s/' + [namespaces.map {|s| s.gsub(/^\/*|\/*$/, "")}.join('/')]
-          end
+          path += '/%s/' % [prefix.gsub(/^\/*|\/*$/, "")] unless prefix.nil?
           request(
             :expects  => [200],
             :method   => 'GET',
