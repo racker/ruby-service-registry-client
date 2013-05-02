@@ -80,7 +80,7 @@ module Fog
           rescue Excon::Errors::HTTPStatusError => error
             raise case error
             when Excon::Errors::NotFound
-              Fog::Monitoring::Rackspace::NotFound.slurp(error)
+              Fog::Rackspace::ServiceRegistry::NotFound.slurp(error)
             else
               error
             end
