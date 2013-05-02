@@ -3,7 +3,7 @@ require 'fog/core/model'
 module Fog
   module Rackspace
     class ServiceRegistry
-      class Service < Fog::Model
+      class Event < Fog::Model
 
         identity :id
         attribute :timestamp
