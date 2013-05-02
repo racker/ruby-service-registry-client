@@ -5,7 +5,7 @@ module Fog
 
         def set_configuration_value(configurationId, value)
           request(
-            :body     => Fog::JSON.encode(:value => value)
+            :body     => Fog::JSON.encode(:value => value),
             :expects  => [204],
             :method   => 'PUT',
             :path     => "configuration/#{configurationId}"
