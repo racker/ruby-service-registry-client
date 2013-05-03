@@ -21,10 +21,6 @@ module Fog
           nil
         end
 
-        def create(attributes = {})
-          super({ :_not_persisted => true }.merge!(attributes))
-        end
-
       end
     end
   end

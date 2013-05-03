@@ -64,12 +64,11 @@ module Fog
           data = {}
           data[:tags] = tags if tags
           data[:metadata] = metadata if metadata
-          unless attributes[:_not_persisted]
-            #TODO: figure out something different. because we need to be able to use save to recreate a service after it has timed out.
+          begin
             requires :identity
             #TODO: assert that data is not empty?
             service.update_service(identity, data)
-          else
+          rescue Excon::Errors::NotFound
             requires :identity, :heartbeat_timeout
             data[:heartbeat_timeout] = heartbeat_timeout
             data[:id] = identity
