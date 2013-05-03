@@ -33,10 +33,13 @@ module Fog
       request     :delete_service
       request     :list_services
       request     :get_service
+      request     :send_heartbeat
+
       request     :set_configuration_value
       request     :delete_configuration_value
       request     :get_configuration_value
       request     :list_configuration_values
+
       request     :list_events
 
       class Mock
