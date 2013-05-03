@@ -39,7 +39,7 @@ module Fog
             :tags => tags,
             :metadata => metadata
           }
-          if identity
+          unless attributes[:_not_persisted]
             connection.update_service(identity, data)
           else
             data[:heartbeat_timeout] = heartbeat_timeout if heartbeat_timeout
