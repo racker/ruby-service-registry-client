@@ -6,10 +6,10 @@ module Fog
       class Service < Fog::Model
 
         class Heartbeater
-          def initialize(service)
+          def initialize(service, initial_token)
             @service = service
             @running = true
-            @next_token = nil
+            @next_token = initial_token
           end
 
           def stop
@@ -39,10 +39,10 @@ module Fog
         attribute :tags
         attribute :last_seen
 
-        def start_heartbeat
+        def start_heartbeat(initial_token)
           #TODO: ensure heartbeat hasn't already started
           return false unless @heartbeat.nil?
-          @heartbeat = hb = Heartbeater.new(self)
+          @heartbeat = hb = Heartbeater.new(self, initial_token)
           @hb_thread = Thread.new do
             hb.start
           end
@@ -65,6 +65,7 @@ module Fog
           data[:tags] = tags if tags
           data[:metadata] = metadata if metadata
           unless attributes[:_not_persisted]
+            #TODO: figure out something different. because we need to be able to use save to recreate a service after it has timed out.
             requires :identity
             #TODO: assert that data is not empty?
             service.update_service(identity, data)
@@ -72,7 +73,8 @@ module Fog
             requires :identity, :heartbeat_timeout
             data[:heartbeat_timeout] = heartbeat_timeout
             data[:id] = identity
-            service.create_service(data)
+            result = service.create_service(data)
+            start_heartbeat(result.body['token'])
           end
           true
         end
