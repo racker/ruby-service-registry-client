@@ -27,7 +27,7 @@ module Fog
             loop do
               break if not @running
               sleep(interval) if @next_token
-              result = @service.connection.send_heartbeat(@service.identity, @next_token)
+              result = @service.service.send_heartbeat(@service.identity, @next_token)
               @next_token = result.body['token']
             end 
           end
