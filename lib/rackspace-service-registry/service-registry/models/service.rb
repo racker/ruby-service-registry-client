@@ -11,21 +11,22 @@ module Fog
             @running = true
             @next_token = nil
           end
+
           def stop
             @running = false
           end
-          def heartbeat
+
+          def start
             interval = @service.heartbeat_timeout
+            #TODO: change interval to something slightly less than the timeout to account for network lag
+            #TODO: get a HTTP 1.1 connection
 
-            return if not @running
-
-            if @next_token
-              sleep(interval)
-            end
-
-            result = @service.connection.send_heartbeat(@service.identity, @next_token)
-            @next_token = result.body['token']
-            heartbeat
+            loop do
+              break if not @running
+              sleep(interval) if @next_token
+              result = @service.connection.send_heartbeat(@service.identity, @next_token)
+              @next_token = result.body['token']
+            end 
           end
         end
 
@@ -33,19 +34,44 @@ module Fog
         attribute :heartbeat_timeout
         attribute :metadata
         attribute :tags
+        attribute :last_seen
+
+        def start_heartbeat
+          #TODO: ensure heartbeat hasn't already started
+          return false unless @heartbeat.nil?
+          @heartbeat = hb = Heartbeater.new self
+          @hb_thread = Thread.new do
+            hb.start
+          end
+          true
+        end
+
+        def stop_heartbeat
+          return false if @heartbeat.nil?
+          @heartbeat.stop
+          @hb_thread.join
+          @hb_thread = nil
+          @heartbeat = nil
+          true
+        end
 
         def save
-          data = {
-            :tags => tags,
-            :metadata => metadata
-          }
+          #TODO: determine and handle behavior when tags is not set
+          #TODO: determine and handle behavior when metadata is not set
+          data = {}
+          data[:tags] = tags if tags
+          data[:metadata] = metadata if metadata
           unless attributes[:_not_persisted]
+            requires :identity
+            #TODO: assert that data is not empty?
             connection.update_service(identity, data)
           else
-            data[:heartbeat_timeout] = heartbeat_timeout if heartbeat_timeout
+            requires :identity, :heartbeat_timeout
+            data[:heartbeat_timeout] = heartbeat_timeout
+            data[:id] = identity
             connection.create_service(data)
           end
-          true #???
+          true
         end
 
         def delete
