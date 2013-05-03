@@ -5,6 +5,30 @@ module Fog
     class ServiceRegistry
       class Service < Fog::Model
 
+        class Heartbeater
+          def initialize(service)
+            @service = service
+            @running = true
+            @next_token = nil
+          end
+          def stop
+            @running = false
+          end
+          def heartbeat
+            interval = @service.heartbeat_timeout
+
+            return if not @running
+
+            if @next_token
+              sleep(interval)
+            end
+
+            result = @service.connection.send_heartbeat(@service.identity, @next_token)
+            @next_token = result.body['token']
+            heartbeat
+          end
+        end
+
         identity :id
         attribute :heartbeat_timeout
         attribute :metadata
