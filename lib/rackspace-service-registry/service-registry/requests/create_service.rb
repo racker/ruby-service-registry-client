@@ -3,13 +3,13 @@ module Fog
     class ServiceRegistry
       class Real
 
-        def create_service(serviceId, options = {})
+        def create_service(options = {})
           data = options.dup
           request(
             :body     => Fog::JSON.encode(data),
             :expects  => [204],
             :method   => 'POST',
-            :path     => "services/#{serviceId}"
+            :path     => "services"
           )
         end
 
