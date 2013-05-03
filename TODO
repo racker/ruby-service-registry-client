@@ -1,0 +1,10 @@
+
+add heartbeater
+add tests
+verify services works properly
+verify creation of configuration items with missing data fails
+verify creation of service items with missing data fails
+create a gem
+upload gem somewhere
+write readme
+
