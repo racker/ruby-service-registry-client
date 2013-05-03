@@ -9,13 +9,13 @@ module Fog
         model Fog::Rackspace::ServiceRegistry::Service
 
         def all(tag=nil)
-          data = connection.list_services(tag).body['values']
+          data = service.list_services(tag).body['values']
           #TODO: add support for pagination
           load(data)
         end
 
         def get(serviceId)
-          data = connection.get_service(serviceId).body
+          data = service.get_service(serviceId).body
           new(data)
         rescue Excon::Errors::NotFound
           nil

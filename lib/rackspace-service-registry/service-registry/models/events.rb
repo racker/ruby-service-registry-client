@@ -9,7 +9,7 @@ module Fog
         model Fog::Rackspace::ServiceRegistry::Event
 
         def all
-          data = connection.list_events.body['values']
+          data = service.list_events.body['values']
           #TODO: add support for pagination
           load(data)
         end

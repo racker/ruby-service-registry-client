@@ -9,13 +9,13 @@ module Fog
         model Fog::Rackspace::ServiceRegistry::Configuration
 
         def all(prefix=nil)
-          data = connection.list_configuration_values(prefix).body['values']
+          data = service.list_configuration_values(prefix).body['values']
           #TODO: add support for pagination
           load(data)
         end
 
         def get(key)
-          data = connection.get_configuration_value(key).body
+          data = service.get_configuration_value(key).body
           new(data)
         rescue Excon::Errors::NotFound
           nil
