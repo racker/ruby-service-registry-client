@@ -18,8 +18,11 @@ module Fog
 
           def start
             interval = @service.heartbeat_timeout
-            #TODO: change interval to something slightly less than the timeout to account for network lag
-            #TODO: get a HTTP 1.1 connection
+            if interval < 15
+              interval = interval * 0.6
+            else
+              interval = interval * 0.8
+            end
 
             loop do
               break if not @running
