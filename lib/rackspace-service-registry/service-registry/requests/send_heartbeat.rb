@@ -7,7 +7,7 @@ module Fog
           request(
             :body     => Fog::JSON.encode(:token => token),
             :expects  => [200],
-            :method   => 'PUT',
+            :method   => 'POST',
             :path     => "services/#{serviceId}/heartbeat"
           )
         end
