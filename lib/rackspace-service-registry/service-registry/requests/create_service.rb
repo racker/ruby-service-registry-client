@@ -7,7 +7,7 @@ module Fog
           data = options.dup
           request(
             :body     => Fog::JSON.encode(data),
-            :expects  => [204],
+            :expects  => [201],
             :method   => 'POST',
             :path     => "services"
           )
