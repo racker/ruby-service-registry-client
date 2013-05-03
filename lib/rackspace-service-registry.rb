@@ -63,6 +63,18 @@ module Fog
           @connection = Fog::Connection.new(@rackspace_endpoint, @persistent, @connection_options)
         end
 
+        def endpoint_uri
+          return @uri if @uri
+          @uri = URI.parse(@rackspace_endpoint)
+          @uri.path = "#{@uri.path}/#{account_id}"
+
+          return @uri
+        end
+
+        def service_name
+          :serviceRegistry
+        end
+
         def reload
           @connection.reset
         end
@@ -74,8 +86,8 @@ module Fog
                 'Content-Type' => 'application/json',
                 'X-Auth-Token' => @auth_token
               }.merge!(params[:headers] || {}),
-              :host     => @host,
-              :path     => "#{@path}/#{params[:path]}"
+              :host     => endpoint_uri.host,
+              :path     => endpoint_uri.path + "/" + params[:path]
             }))
           rescue Excon::Errors::HTTPStatusError => error
             raise error
@@ -92,13 +104,21 @@ module Fog
 
         private
 
+        def account_id
+          authenticate if @identity_service.nil?
+          monitoring_uri = @identity_service.service_catalog.catalog[:cloudMonitoring]
+          @account_id = monitoring_uri.split('/').last
+        end
+
         def authenticate
           options = {
             :rackspace_api_key  => @rackspace_api_key,
             :rackspace_username => @rackspace_username,
             :rackspace_auth_url => @rackspace_auth_url
           }
-          super(options)
+
+          @identity_service = Fog::Rackspace::Identity.new(options)
+          @auth_token = @identity_service.auth_token
         end
       end
     end
