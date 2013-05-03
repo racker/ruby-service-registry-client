@@ -39,7 +39,7 @@ module Fog
         def start_heartbeat
           #TODO: ensure heartbeat hasn't already started
           return false unless @heartbeat.nil?
-          @heartbeat = hb = Heartbeater.new self
+          @heartbeat = hb = Heartbeater.new(self)
           @hb_thread = Thread.new do
             hb.start
           end
