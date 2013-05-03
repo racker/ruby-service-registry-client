@@ -16,6 +16,7 @@ module Fog
       recognizes :rackspace_endpoint
       recognizes :rackspace_auth_url
       recognizes :rackspace_auth_token
+      recognizes :persistent
 
       model_path  'rackspace-service-registry/service-registry/models'
       model       :service
